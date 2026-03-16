@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>도우서 | Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Mono:wght@400;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --surface: #141416;
+    --border: #222226;
+    --accent: #6af0c8;
+    --accent2: #a78bfa;
+    --text: #e8e8f0;
+    --muted: #6b6b7a;
+    --card-bg: #18181c;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px;
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 48px;
+    background: rgba(13,13,15,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    align-items: center;
+  }
+
+  /* glow blobs */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+  }
+  .blob-1 {
+    width: 500px; height: 500px;
+    background: rgba(106,240,200,0.06);
+    top: -100px; left: -100px;
+    animation: float 10s ease-in-out infinite;
+  }
+  .blob-2 {
+    width: 400px; height: 400px;
+    background: rgba(167,139,250,0.07);
+    bottom: 0; right: 100px;
+    animation: float 14s ease-in-out infinite reverse;
+  }
+  @keyframes float {
+    0%,100% { transform: translate(0,0); }
+    50% { transform: translate(30px, -30px); }
+  }
+
+  .hero-text { position: relative; }
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(52px, 6vw, 80px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+  .hero-name span { color: var(--accent); }
+  .hero-desc {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 420px;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+    line-height: 1.8;
+  }
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.7s forwards;
+  }
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .tag.accent { border-color: rgba(106,240,200,0.3); color: var(--accent); }
+
+  .hero-cta {
+    display: flex; gap: 16px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+  .btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    padding: 12px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #0d0d0f;
+    font-weight: 700;
+  }
+  .btn-primary:hover { background: #4dd8b0; transform: translateY(-1px); }
+  .btn-ghost {
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* AVATAR */
+  .hero-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeIn 1s 0.5s forwards;
+  }
+  .avatar-wrap {
+    position: relative;
+    width: 320px; height: 320px;
+  }
+  .avatar-ring {
+    position: absolute;
+    inset: -16px;
+    border-radius: 50%;
+    border: 1px solid rgba(106,240,200,0.2);
+    animation: spin 20s linear infinite;
+  }
+  .avatar-ring::before {
+    content: '';
+    position: absolute;
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    top: 50%; left: -4px;
+    transform: translateY(-50%);
+    box-shadow: 0 0 12px var(--accent);
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .avatar-img {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--border);
+    background: var(--card-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 120px;
+    overflow: hidden;
+  }
+  .avatar-placeholder {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1e1e24, #2a2a32);
+    border: 3px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 100px;
+    user-select: none;
+  }
+  .floating-badge {
+    position: absolute;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .badge-1 { top: 20px; right: -30px; }
+  .badge-1 span { color: var(--accent); }
+  .badge-2 { bottom: 40px; left: -30px; }
+  .badge-2 span { color: var(--accent2); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── SECTION ── */
+  section {
+    padding: 100px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.1;
+    margin-bottom: 60px;
+    color: var(--text);
+  }
+  .section-title em { color: var(--accent); font-style: normal; }
+
+  /* ── PROJECT CARDS ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+  }
+
+  .project-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    display: flex;
+    flex-direction: column;
+  }
+  .project-card:hover {
+    border-color: rgba(106,240,200,0.4);
+    transform: translateY(-4px);
+  }
+
+  .card-thumb {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+    background: #111115;
+  }
+  .card-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: top;
+    transition: transform 0.5s;
+  }
+  .project-card:hover .card-thumb img { transform: scale(1.04); }
+  .card-thumb-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 50%, var(--card-bg));
+  }
+
+  .card-body {
+    padding: 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .card-period {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .card-stack {
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .stack-dot {
+    font-size: 10px;
+    padding: 2px 8px;
+    background: rgba(106,240,200,0.08);
+    border: 1px solid rgba(106,240,200,0.15);
+    border-radius: 100px;
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+  }
+
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .card-role {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent2);
+    margin-bottom: 12px;
+    letter-spacing: 0.05em;
+  }
+  .card-role::before { content: '⬡ '; }
+  .card-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.75;
+    flex: 1;
+    margin-bottom: 20px;
+  }
+  .card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(106,240,200,0.25);
+    padding: 8px 16px;
+    border-radius: 6px;
+    align-self: flex-start;
+    transition: all 0.2s;
+  }
+  .card-link:hover {
+    background: rgba(106,240,200,0.08);
+    border-color: var(--accent);
+  }
+  .card-link svg { width: 14px; height: 14px; }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .skill-group {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .skill-group-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .skill-list {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .skill-item {
+    font-size: 12px;
+    padding: 4px 10px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 4px;
+    color: var(--text);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 100%;
+  }
+  footer p {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  footer a {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* ── SCROLL ANIMATION ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero { padding: 100px 24px 60px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+    .hero-visual { order: -1; }
+    .avatar-wrap { width: 220px; height: 220px; }
+    section { padding: 60px 24px; }
+    footer { flex-direction: column; gap: 12px; text-align: center; padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">PEINOI.DEV</a>
+  <div class="nav-links">
+    <a href="#about">ABOUT</a>
+    <a href="#projects">PROJECTS</a>
+    <a href="#skills">SKILLS</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="about">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="hero-grid">
+    <div class="hero-text">
+      <p class="hero-eyebrow">// PORTFOLIO</p>
+      <h1 class="hero-name">Do<span>.</span><br/>Woo-Seo</h1>
+      <p class="hero-desc">
+        Vue.js · Spring · Node.js 기반의 풀스택 개발자입니다.<br/>
+        복지, 생산관리, 협업 도구 등 다양한 도메인의 프로젝트를 경험했습니다.
+      </p>
+      <div class="hero-tags">
+        <span class="tag accent">Vue.js</span>
+        <span class="tag accent">Spring</span>
+        <span class="tag accent">Node.js</span>
+        <span class="tag">MariaDB</span>
+        <span class="tag">Oracle</span>
+        <span class="tag">AWS</span>
+      </div>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#projects">Projects ↓</a>
+        <a class="btn btn-ghost" href="https://github.com/Peinoi" target="_blank">GitHub</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="avatar-wrap">
+        <div class="avatar-ring"></div>
+        <div class="avatar-placeholder">
+          <img
+            src="https://github.com/user-attachments/assets/fd2ed4de-b16c-4339-a6f7-bc8f4d846d29"
+            alt="도우서 프로필"
+            style="width:100%;height:100%;border-radius:50%;object-fit:cover;"
+            onerror="this.style.display='none';this.parentElement.innerHTML='🧑‍💻';"
+          />
+        </div>
+        <div class="floating-badge badge-1">팀장 경험 <span>✓</span></div>
+        <div class="floating-badge badge-2">3 Projects <span>↗</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="section-label reveal">// PROJECTS</p>
+  <h2 class="section-title reveal">진행한 <em>프로젝트</em></h2>
+
+  <div class="projects-grid">
+
+    <!-- Card 1: G2gether -->
+    <div class="project-card reveal">
+      <div class="card-thumb">
+        <img
+          src="https://github.com/user-attachments/assets/8a8b91ff-a352-4c88-bd2f-d9bdd0d71459"
+          alt="G2gether 협업 플랫폼 메인 화면"
+          loading="lazy"
+        />
+        <div class="card-thumb-overlay"></div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-period">2026.01 – 03</span>
+          <div class="card-stack">
+            <span class="stack-dot">Spring</span>
+            <span class="stack-dot">Oracle</span>
+            <span class="stack-dot">AWS</span>
+          </div>
+        </div>
+        <h3 class="card-title">G2gether</h3>
+        <p class="card-role">부팀장 · 시스템 관리 파트 · Git 관리</p>
+        <p class="card-desc">
+          팀 협업 통합 플랫폼. 프로젝트 관리, 일정 조율, 권한 기반 접근 제어를 하나의 웹 시스템으로 구현.
+          사용자·역할·그룹 관리 및 일감 유형 계층 구조 설계를 담당.
+        </p>
+        <a class="card-link" href="https://github.com/Peinoi/redmineProject1" target="_blank">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          GitHub 보기
+        </a>
+      </div>
+    </div>
+
+    <!-- Card 2: MES -->
+    <div class="project-card reveal">
+      <div class="card-thumb">
+        <img
+          src="https://github.com/user-attachments/assets/4d1e5bff-d2dd-426f-bdac-2ad78dee168d"
+          alt="YD MES 프로젝트 메인 화면"
+          loading="lazy"
+        />
+        <div class="card-thumb-overlay"></div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-period">2025.12</span>
+          <div class="card-stack">
+            <span class="stack-dot">Vue.js</span>
+            <span class="stack-dot">Express</span>
+            <span class="stack-dot">MariaDB</span>
+          </div>
+        </div>
+        <h3 class="card-title">YD MES</h3>
+        <p class="card-role">생산 관리 파트</p>
+        <p class="card-desc">
+          라면 공장 생산 공정 MES 시스템. 작업 지시서 기반 공정 호출, 설비 선택, 생산 시작/종료 처리 및 실적 등록 기능 구현.
+          실시간 생산 상태 가시화 담당.
+        </p>
+        <a class="card-link" href="https://github.com/Peinoi/YD_MES_Project" target="_blank">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          GitHub 보기
+        </a>
+      </div>
+    </div>
+
+    <!-- Card 3: G2 장애인 지원 -->
+    <div class="project-card reveal">
+      <div class="card-thumb">
+        <img
+          src="https://github.com/user-attachments/assets/6a214a16-b317-49a8-8e57-175bf7408ab2"
+          alt="G2 장애인 지원 프로그램 메인 화면"
+          loading="lazy"
+        />
+        <div class="card-thumb-overlay"></div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-period">2025.10 – 11</span>
+          <div class="card-stack">
+            <span class="stack-dot">Vue.js</span>
+            <span class="stack-dot">Express</span>
+            <span class="stack-dot">MariaDB</span>
+          </div>
+        </div>
+        <h3 class="card-title">G2 장애인 지원</h3>
+        <p class="card-role">팀장 · 후원 시스템 파트</p>
+        <p class="card-desc">
+          장애인 복지 정보 통합 플랫폼. 후원 프로그램 등록/관리, 카카오페이 결제 연동,
+          활동 보고서 및 예산 총괄표 구현. CKEditor5 적용.
+        </p>
+        <a class="card-link" href="https://github.com/Peinoi/G2" target="_blank">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          GitHub 보기
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <p class="section-label reveal">// TECH STACK</p>
+  <h2 class="section-title reveal">사용한 <em>기술</em></h2>
+  <div class="skills-grid">
+    <div class="skill-group reveal">
+      <p class="skill-group-name">Frontend</p>
+      <div class="skill-list">
+        <span class="skill-item">Vue.js</span>
+        <span class="skill-item">JavaScript</span>
+        <span class="skill-item">jQuery</span>
+        <span class="skill-item">Thymeleaf</span>
+        <span class="skill-item">HTML/CSS</span>
+        <span class="skill-item">Bootstrap 5</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <p class="skill-group-name">Backend</p>
+      <div class="skill-list">
+        <span class="skill-item">Spring</span>
+        <span class="skill-item">Node.js</span>
+        <span class="skill-item">Express.js</span>
+        <span class="skill-item">Java</span>
+        <span class="skill-item">MyBatis</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <p class="skill-group-name">Database</p>
+      <div class="skill-list">
+        <span class="skill-item">MariaDB</span>
+        <span class="skill-item">Oracle DB</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <p class="skill-group-name">DevOps / Tool</p>
+      <div class="skill-list">
+        <span class="skill-item">Git</span>
+        <span class="skill-item">AWS EC2</span>
+        <span class="skill-item">Jenkins</span>
+        <span class="skill-item">Docker</span>
+        <span class="skill-item">Maven</span>
+        <span class="skill-item">Naver Cloud</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <p class="skill-group-name">External API</p>
+      <div class="skill-list">
+        <span class="skill-item">KakaoPay</span>
+        <span class="skill-item">CKEditor5</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Do Woo-Seo · Peinoi</p>
+  <a href="https://github.com/Peinoi" target="_blank">github.com/Peinoi ↗</a>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
