@@ -9,364 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Mono:wght@400;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-<style>
-  :root {
-    --bg: #0d0d0f;
-    --surface: #141416;
-    --border: #222226;
-    --accent: #6af0c8;
-    --accent2: #a78bfa;
-    --accent3: #f0916a;
-    --text: #e8e8f0;
-    --muted: #6b6b7a;
-    --card-bg: #18181c;
-  }
-
-  body.light-theme {
-    --bg: #f5f5f0;
-    --surface: #ebebе6;
-    --border: #d4d4cc;
-    --accent: #007a5e;
-    --accent2: #6d4fc7;
-    --accent3: #c45a2a;
-    --text: #1a1a1f;
-    --muted: #6b6b7a;
-    --card-bg: #ffffff;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 300;
-    line-height: 1.7;
-    overflow-x: hidden;
-    transition: background 0.35s ease, color 0.35s ease;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    background-size: 200px;
-    pointer-events: none;
-    z-index: 999;
-    opacity: 0.4;
-  }
-
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 48px;
-    background: rgba(13,13,15,0.85);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
-    transition: background 0.35s ease, border-color 0.35s ease;
-  }
-
-  body.light-theme nav { background: rgba(245,245,240,0.88); }
-
-  .nav-logo {
-    font-family: 'Space Mono', monospace;
-    font-size: 14px;
-    color: var(--accent);
-    letter-spacing: 0.1em;
-    text-decoration: none;
-    transition: color 0.35s ease;
-  }
-
-  .nav-right { display: flex; align-items: center; gap: 32px; }
-  .nav-links { display: flex; gap: 32px; }
-
-  .nav-links a {
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    color: var(--muted);
-    text-decoration: none;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--accent); }
-  .nav-links a.games-link:hover { color: var(--accent3); }
-
-  .theme-toggle {
-    position: relative; width: 52px; height: 26px;
-    cursor: pointer; background: none; border: none; padding: 0; flex-shrink: 0;
-  }
-
-  .toggle-track {
-    width: 52px; height: 26px; border-radius: 13px;
-    border: 1px solid var(--border);
-    background: rgba(255,255,255,0.06);
-    position: relative;
-    transition: background 0.35s ease, border-color 0.35s ease;
-    display: flex; align-items: center; padding: 0 4px; justify-content: space-between;
-  }
-  body.light-theme .toggle-track { background: rgba(0,0,0,0.07); }
-
-  .toggle-thumb {
-    position: absolute; width: 20px; height: 20px; border-radius: 50%;
-    background: var(--accent); left: 3px; top: 2px;
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.35s ease;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.3);
-  }
-  body.light-theme .toggle-thumb { transform: translateX(26px); }
-
-  .hero {
-    min-height: 100vh; display: flex; align-items: center;
-    padding: 120px 48px 80px; position: relative; overflow: hidden;
-  }
-
-  .hero-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
-    max-width: 1200px; margin: 0 auto; width: 100%; align-items: center;
-  }
-
-  .blob { position: absolute; border-radius: 50%; filter: blur(120px); pointer-events: none; }
-  .blob-1 { width: 500px; height: 500px; background: rgba(106,240,200,0.06); top: -100px; left: -100px; animation: float 10s ease-in-out infinite; }
-  .blob-2 { width: 400px; height: 400px; background: rgba(167,139,250,0.07); bottom: 0; right: 100px; animation: float 14s ease-in-out infinite reverse; }
-  body.light-theme .blob-1 { background: rgba(0,122,94,0.07); }
-  body.light-theme .blob-2 { background: rgba(109,79,199,0.07); }
-
-  @keyframes float { 0%,100% { transform: translate(0,0); } 50% { transform: translate(30px,-30px); } }
-
-  .hero-text { position: relative; }
-
-  .hero-eyebrow {
-    font-family: 'Space Mono', monospace; font-size: 12px; color: var(--accent);
-    letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 20px;
-    opacity: 0; animation: fadeUp 0.8s 0.2s forwards; transition: color 0.35s ease;
-  }
-
-  .hero-name {
-    font-family: 'DM Serif Display', serif; font-size: clamp(52px, 6vw, 80px);
-    line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 24px;
-    opacity: 0; animation: fadeUp 0.8s 0.4s forwards;
-  }
-  .hero-name span { color: var(--accent); transition: color 0.35s ease; }
-
-  .hero-desc {
-    font-size: 16px; color: var(--muted); max-width: 420px; margin-bottom: 40px;
-    opacity: 0; animation: fadeUp 0.8s 0.6s forwards; line-height: 1.8; transition: color 0.35s ease;
-  }
-
-  .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; opacity: 0; animation: fadeUp 0.8s 0.7s forwards; }
-
-  .tag {
-    font-family: 'Space Mono', monospace; font-size: 11px; padding: 5px 12px;
-    border: 1px solid var(--border); border-radius: 100px; color: var(--muted);
-    letter-spacing: 0.05em; transition: border-color 0.35s ease, color 0.35s ease;
-  }
-  .tag.accent { border-color: rgba(106,240,200,0.3); color: var(--accent); }
-  body.light-theme .tag.accent { border-color: rgba(0,122,94,0.35); }
-
-  .hero-cta { display: flex; gap: 16px; opacity: 0; animation: fadeUp 0.8s 0.8s forwards; }
-
-  .btn {
-    font-family: 'Space Mono', monospace; font-size: 12px; padding: 12px 24px;
-    border-radius: 6px; text-decoration: none; letter-spacing: 0.05em;
-    transition: all 0.2s; display: inline-block;
-  }
-  .btn-primary { background: var(--accent); color: #0d0d0f; font-weight: 700; }
-  .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
-  .btn-ghost { border: 1px solid var(--border); color: var(--muted); transition: border-color 0.2s, color 0.2s; }
-  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-
-  .hero-visual { position: relative; display: flex; justify-content: center; opacity: 0; animation: fadeIn 1s 0.5s forwards; }
-
-  .avatar-wrap { position: relative; width: 320px; height: 320px; }
-
-  .avatar-ring {
-    position: absolute; inset: -16px; border-radius: 50%;
-    border: 1px solid rgba(106,240,200,0.2);
-    animation: spin 20s linear infinite; transition: border-color 0.35s ease;
-  }
-  body.light-theme .avatar-ring { border-color: rgba(0,122,94,0.25); }
-
-  .avatar-ring::before {
-    content: ''; position: absolute; width: 8px; height: 8px;
-    background: var(--accent); border-radius: 50%; top: 50%; left: -4px;
-    transform: translateY(-50%); box-shadow: 0 0 12px var(--accent);
-    transition: background 0.35s ease, box-shadow 0.35s ease;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .avatar-placeholder {
-    width: 100%; height: 100%; border-radius: 50%;
-    background: linear-gradient(135deg, #1e1e24, #2a2a32);
-    border: 3px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 100px; user-select: none; overflow: hidden;
-    transition: border-color 0.35s ease, background 0.35s ease;
-  }
-  body.light-theme .avatar-placeholder { background: linear-gradient(135deg, #e8e8e2, #d8d8d2); }
-
-  .floating-badge {
-    position: absolute; background: var(--card-bg); border: 1px solid var(--border);
-    border-radius: 10px; padding: 10px 16px; font-family: 'Space Mono', monospace;
-    font-size: 11px; white-space: nowrap;
-    transition: background 0.35s ease, border-color 0.35s ease, color 0.35s ease;
-  }
-  .badge-1 { top: 20px; right: -30px; }
-  .badge-1 span { color: var(--accent); transition: color 0.35s ease; }
-  .badge-2 { bottom: 40px; left: -30px; }
-  .badge-2 span { color: var(--accent2); transition: color 0.35s ease; }
-
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-  .divider { max-width: 1200px; margin: 0 auto; padding: 0 48px; border-top: 1px solid var(--border); transition: border-color 0.35s ease; }
-
-  section { padding: 100px 48px; max-width: 1200px; margin: 0 auto; }
-
-  .section-label {
-    font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent);
-    letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 12px; transition: color 0.35s ease;
-  }
-  #games .section-label { color: var(--accent3); }
-
-  .section-title {
-    font-family: 'DM Serif Display', serif; font-size: clamp(32px, 4vw, 48px);
-    line-height: 1.1; margin-bottom: 60px; color: var(--text); transition: color 0.35s ease;
-  }
-  .section-title em { color: var(--accent); font-style: normal; transition: color 0.35s ease; }
-  #games .section-title em { color: var(--accent3); }
-
-  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
-
-  .project-card {
-    background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px;
-    overflow: hidden; transition: border-color 0.3s, transform 0.3s, background 0.35s ease;
-    display: flex; flex-direction: column;
-  }
-  .project-card:hover { border-color: rgba(106,240,200,0.4); transform: translateY(-4px); }
-  body.light-theme .project-card:hover { border-color: rgba(0,122,94,0.45); }
-
-  .game-card:hover { border-color: rgba(240,145,106,0.4) !important; }
-  body.light-theme .game-card:hover { border-color: rgba(196,90,42,0.45) !important; }
-
-  .card-thumb { height: 200px; overflow: hidden; position: relative; background: #111115; transition: background 0.35s ease; }
-  body.light-theme .card-thumb { background: #e0e0da; }
-
-  .card-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform 0.5s; }
-  .project-card:hover .card-thumb img { transform: scale(1.04); }
-
-  .card-thumb-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, var(--card-bg)); transition: background 0.35s ease; }
-
-  /* 이미지 placeholder */
-  .game-thumb-placeholder {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(135deg, #1a1a20, #252530);
-    color: var(--muted); font-family: 'Space Mono', monospace;
-    font-size: 11px; letter-spacing: 0.1em; flex-direction: column; gap: 10px;
-    transition: background 0.35s ease;
-  }
-  body.light-theme .game-thumb-placeholder { background: linear-gradient(135deg, #deded8, #cacac4); }
-  .game-thumb-placeholder i { font-size: 28px; color: var(--accent3); opacity: 0.45; }
-
-  /* img 로드 되면 placeholder 위에 덮음 */
-  .card-thumb img[src]:not([src=""]) { position: relative; z-index: 1; }
-
-  .card-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
-  .card-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-
-  .card-period { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.05em; transition: color 0.35s ease; }
-
-  .card-stack { display: flex; gap: 6px; flex-wrap: wrap; }
-
-  .stack-dot {
-    font-size: 10px; padding: 2px 8px;
-    background: rgba(106,240,200,0.08); border: 1px solid rgba(106,240,200,0.15);
-    border-radius: 100px; color: var(--accent); font-family: 'Space Mono', monospace;
-    transition: color 0.35s ease, border-color 0.35s ease;
-  }
-  body.light-theme .stack-dot { background: rgba(0,122,94,0.08); border-color: rgba(0,122,94,0.2); }
-
-  .game-card .stack-dot { background: rgba(240,145,106,0.08); border-color: rgba(240,145,106,0.15); color: var(--accent3); }
-  body.light-theme .game-card .stack-dot { background: rgba(196,90,42,0.08); border-color: rgba(196,90,42,0.2); }
-
-  .card-title { font-family: 'DM Serif Display', serif; font-size: 22px; margin-bottom: 8px; color: var(--text); transition: color 0.35s ease; }
-
-  .card-role { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent2); margin-bottom: 12px; letter-spacing: 0.05em; transition: color 0.35s ease; }
-  .card-role::before { content: '⬡ '; }
-  .game-card .card-role { color: var(--accent3); opacity: 0.9; }
-
-  .card-desc { font-size: 14px; color: var(--muted); line-height: 1.75; flex: 1; margin-bottom: 20px; transition: color 0.35s ease; }
-
-  .card-team {
-    font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted);
-    margin-bottom: 16px; letter-spacing: 0.04em; padding: 8px 12px;
-    border: 1px solid var(--border); border-radius: 6px;
-    display: inline-flex; align-items: center; gap: 6px;
-    line-height: 1.6; transition: border-color 0.35s ease;
-  }
-  .card-team i { font-size: 10px; color: var(--accent3); flex-shrink: 0; }
-
-  .card-link {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent);
-    text-decoration: none; letter-spacing: 0.05em;
-    border: 1px solid rgba(106,240,200,0.25); padding: 8px 16px;
-    border-radius: 6px; align-self: flex-start; transition: all 0.2s;
-  }
-  body.light-theme .card-link { border-color: rgba(0,122,94,0.3); }
-  .card-link:hover { background: rgba(106,240,200,0.08); border-color: var(--accent); }
-  body.light-theme .card-link:hover { background: rgba(0,122,94,0.08); }
-  .card-link svg { width: 14px; height: 14px; }
-
-  .game-card .card-link { color: var(--accent3); border-color: rgba(240,145,106,0.25); }
-  body.light-theme .game-card .card-link { border-color: rgba(196,90,42,0.3); }
-  .game-card .card-link:hover { background: rgba(240,145,106,0.08); border-color: var(--accent3); }
-  body.light-theme .game-card .card-link:hover { background: rgba(196,90,42,0.08); }
-
-  .card-link-disabled {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted);
-    letter-spacing: 0.05em; border: 1px solid var(--border);
-    padding: 8px 16px; border-radius: 6px; align-self: flex-start;
-    opacity: 0.4; cursor: default;
-  }
-
-  .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
-
-  .skill-group { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; transition: background 0.35s ease, border-color 0.35s ease; }
-
-  .skill-group-name { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 12px; transition: color 0.35s ease; }
-
-  .skill-list { display: flex; flex-wrap: wrap; gap: 6px; }
-
-  .skill-item { font-size: 12px; padding: 4px 10px; background: rgba(255,255,255,0.04); border-radius: 4px; color: var(--text); transition: background 0.35s ease, color 0.35s ease; }
-  body.light-theme .skill-item { background: rgba(0,0,0,0.05); }
-
-  footer { border-top: 1px solid var(--border); padding: 40px 48px; display: flex; align-items: center; justify-content: space-between; max-width: 100%; transition: border-color 0.35s ease; }
-  footer p { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); transition: color 0.35s ease; }
-  footer a { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent); text-decoration: none; transition: color 0.35s ease; }
-
-  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-
-  @media (max-width: 768px) {
-    nav { padding: 16px 24px; }
-    .nav-links { display: none; }
-    .hero { padding: 100px 24px 60px; }
-    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
-    .hero-visual { order: -1; }
-    .avatar-wrap { width: 220px; height: 220px; }
-    section { padding: 60px 24px; }
-    footer { flex-direction: column; gap: 12px; text-align: center; padding: 32px 24px; }
-  }
-</style>
+<link rel="stylesheet" href="index.css"/>
 </head>
 <body>
 
@@ -458,6 +101,7 @@ Unity · C#으로 게임을 만드는 개발자입니다.</br>
         <h3 class="card-title">G2gether</h3>
         <p class="card-role">부팀장 · 시스템 관리 파트 · Git 관리</p>
         <p class="card-desc">팀 협업 통합 플랫폼. 프로젝트 관리, 일정 조율, 권한 기반 접근 제어를 하나의 웹 시스템으로 구현. 사용자·역할·그룹 관리 및 일감 유형 계층 구조 설계를 담당.</p>
+       <div class="card-links">
         <a class="card-link" href="https://github.com/Peinoi/redmineProject1" target="_blank">
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
           GitHub 보기
@@ -466,6 +110,7 @@ Unity · C#으로 게임을 만드는 개발자입니다.</br>
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
           YouTube
         </a>
+      </div>
       </div>
     </div>
 
@@ -490,7 +135,10 @@ Unity · C#으로 게임을 만드는 개발자입니다.</br>
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
           GitHub 보기
         </a>
-       
+        <span class="card-link-disabled">
+          <i class="fa-solid fa-lock" style="font-size:11px;"></i>
+          링크 없음
+       </span>
       </div>
     </div>
 
@@ -511,6 +159,7 @@ Unity · C#으로 게임을 만드는 개발자입니다.</br>
         <h3 class="card-title">G2 장애인 지원</h3>
         <p class="card-role">팀장 · 후원 시스템 파트</p>
         <p class="card-desc">장애인 복지 정보 통합 플랫폼. 후원 프로그램 등록/관리, 카카오페이 결제 연동, 활동 보고서 및 예산 총괄표 구현. CKEditor5 적용.</p>
+        <div class="card-links">
         <a class="card-link" href="https://github.com/Peinoi/G2" target="_blank">
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
           GitHub 보기
@@ -519,6 +168,7 @@ Unity · C#으로 게임을 만드는 개발자입니다.</br>
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
           YouTube
         </a>
+        </div>
       </div>
     </div>
 
@@ -563,6 +213,7 @@ Unity · C#으로 게임을 만드는 개발자입니다.</br>
           <i class="fa-solid fa-users"></i>
           기획 및 연출, 데이터 관리 / 에너미, 맵 관리 [총 4명]
         </div>
+        <div class="card-links">
         <span class="card-link-disabled">
           <i class="fa-solid fa-lock" style="font-size:11px;"></i>
           링크 없음
@@ -571,6 +222,7 @@ Unity · C#으로 게임을 만드는 개발자입니다.</br>
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
           YouTube
         </a>
+        </div>
       </div>
     </div>
 
@@ -604,6 +256,7 @@ Unity · C#으로 게임을 만드는 개발자입니다.</br>
           <i class="fa-solid fa-users"></i>
           기획 및 서버, 통합 관리 / 배틀 시스템, UI/UX, 아트 [총 5명]
         </div>
+         <div class="card-links">
         <a class="card-link" href="https://github.com/Peinoi/Capstone-Design" target="_blank">
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
           GitHub 보기
@@ -612,6 +265,7 @@ Unity · C#으로 게임을 만드는 개발자입니다.</br>
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
           YouTube
         </a>
+        </div>
       </div>
     </div>
 
@@ -644,6 +298,7 @@ Unity · C#으로 게임을 만드는 개발자입니다.</br>
           <i class="fa-solid fa-users"></i>
           개발 [총 6명]
         </div>
+       <div class="card-links">
         <a class="card-link" href="https://github.com/Peinoi/CrazyMainCreate" target="_blank">
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
           GitHub 보기
@@ -652,6 +307,7 @@ Unity · C#으로 게임을 만드는 개발자입니다.</br>
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
           YouTube
         </a>
+        </div>
       </div>
     </div>
 
@@ -729,45 +385,10 @@ Unity · C#으로 게임을 만드는 개발자입니다.</br>
 </section>
 
 <footer>
-  <p>© 2026 Do Woo-Seo · Peinoi</p>
+  <p>© Do Woo-Seo · Peinoi</p>
   <a href="https://github.com/Peinoi" target="_blank">github.com/Peinoi ↗</a>
 </footer>
 
-<script>
-  const toggle = document.getElementById('themeToggle');
-  const body = document.body;
-
-  const saved = localStorage.getItem('theme');
-  if (saved === 'light') body.classList.add('light-theme');
-
-  toggle.addEventListener('click', () => {
-    body.classList.toggle('light-theme');
-    const isLight = body.classList.contains('light-theme');
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
-  });
-
-  // 게임 카드: 이미지 src가 있고 실제로 로드되면 placeholder 숨기기
-  document.querySelectorAll('.game-card .card-thumb').forEach(thumb => {
-    const img = thumb.querySelector('img');
-    const placeholder = thumb.querySelector('.game-thumb-placeholder');
-    if (!img || !img.src || img.src === window.location.href) return;
-    img.addEventListener('load', () => {
-      if (placeholder) placeholder.style.display = 'none';
-    });
-    img.addEventListener('error', () => {
-      img.style.display = 'none';
-    });
-  });
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((e, i) => {
-      if (e.isIntersecting) {
-        setTimeout(() => e.target.classList.add('visible'), i * 80);
-      }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-</script>
+<script src="index.js"></script>
 </body>
 </html>
